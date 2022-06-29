@@ -51,7 +51,7 @@ module Codelog
           change_files_paths.inject({}) do |all_changes, change_file|
             changes_per_category = YAML.load_file(change_file)
             all_changes.merge!(changes_per_category) do |category, changes, changes_to_be_added|
-              changes | changes_to_be_added
+              (changes || []) | (changes_to_be_added || [])
             end
           end
         rescue Psych::SyntaxError => error
