@@ -1,6 +1,7 @@
 require 'date'
 require 'yaml'
 require 'fileutils'
+require 'stringio'
 
 module Codelog
   module Command
