@@ -67,6 +67,20 @@ describe Codelog::Command::Step::Version do
         expect(mocked_string_io).to have_received(:string)
       end
 
+      it 'leaves out categories without changes' do
+        allow(YAML).to receive(:load_file).with('file_1.yml') { { 'Category_1' => ['value_1'], 'Empty' => nil } }
+        allow(YAML).to receive(:load_file).with('file_2.yml') { { 'Category_1' => ['value_2'], 'Blank' => [] } }
+        allow(StringIO).to receive(:new).and_return mocked_string_io
+        allow(mocked_string_io).to receive(:puts)
+        allow(mocked_string_io).to receive(:string)
+
+        subject.run
+
+        expect(mocked_string_io).to have_received(:puts).with '### Category_1'
+        expect(mocked_string_io).not_to have_received(:puts).with '### Empty'
+        expect(mocked_string_io).not_to have_received(:puts).with '### Blank'
+      end
+
       it 'checks the existence of an already existing version of the release' do
         expect(subject).to receive(:version_exists?)
         subject.run

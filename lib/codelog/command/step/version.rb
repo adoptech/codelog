@@ -39,6 +39,8 @@ module Codelog
           file_content = StringIO.new
           file_content.puts "## #{Codelog::Config.version_tag(@version, @release_date)}"
           changes_hash.each do |category, changes|
+            next if Array(changes).empty?
+
             file_content.puts "### #{category}"
             add_entry(file_content, changes)
             file_content.puts "\n"
